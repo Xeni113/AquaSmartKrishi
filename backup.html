@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Montserrat&family=Orbitron&family=Open+Sans&family=Rajdhani&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="style.css">
+
+<title>AquaSmart Krishi App</title>
+</head>
+<body>
+
+<header>
+    <div class="logo"><img src="images/app-logo.png" alt="AquaSmart Logo"></div>
+    <div class="title">AquaSmart Krishi</div>
+    <nav>
+        <button id="start-analysis">Start Analysis</button>
+        <button id="open-farm">Open Farm</button>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero-section fade-in">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Welcome to AquaSmart Krishi</h1>
+            <p>Save water, increase yield. Use AI-powered analysis to manage your farm efficiently and sustainably.</p>
+            <div class="hero-buttons">
+                <button id="go-form">Develop Plan</button>
+                <button id="see-report">View Report</button>
+            </div>
+        </div>
+        <div class="carousel">
+            <img src="images/crop1.jpg" alt="Crop 1">
+        </div>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section class="form-section fade-in" id="form-section">
+    <div class="form-card">
+        <h2>Setup Your Farm</h2>
+        <label for="crop-select">Select Crop</label>
+        <select id="crop-select">
+            <option value="Wheat">Wheat</option>
+            <option value="Rice">Rice</option>
+            <option value="Cotton">Cotton</option>
+            <option value="Sugarcane">Sugarcane</option>
+        </select>
+
+        <label for="soil-select">Select Soil Type</label>
+        <select id="soil-select">
+            <option value="Loam">Loam</option>
+            <option value="Clay">Clay</option>
+            <option value="Sandy">Sandy</option>
+            <option value="Alluvial">Alluvial</option>
+        </select>
+
+        <label for="land-area">Area of Land (acres)</label>
+        <input type="number" id="land-area" placeholder="2.5">
+
+        <label for="region-name">Region</label>
+        <input type="text" id="region-name" placeholder="Pune">
+
+        <button id="submit-btn">Develop Plan</button>
+    </div>
+</section>
+
+<!-- Report Section -->
+<section class="report-section fade-in" id="report-section">
+    <div class="report-card">
+        <h2>Weather Forecast</h2>
+        <p>Location: <span id="report-location">---</span></p>
+        <p>Temperature: <span id="report-temp">0°C</span></p>
+        <p>Rain Forecast: <span id="report-rain">0 mm</span></p>
+    </div>
+    <div class="report-card">
+        <h2>Water & Energy</h2>
+        <p>Daily Water Needed: <span id="report-water">0 L</span></p>
+        <p>Sprinklers Suggested: <span id="report-sprinklers">0</span></p>
+        <p>Energy Usage: <span id="report-energy">0 kWh</span></p>
+    </div>
+    <div class="report-card">
+        <h2>Crop Recommendations</h2>
+        <p>Pros: <span id="pros">---</span></p>
+        <p>Cons: <span id="cons">---</span></p>
+        <p>Fertilizer Advice: <span id="fertilizer">---</span></p>
+        <p>Irrigation Method: <span id="irrigation">---</span></p>
+        <p>Daily Schedule: <span id="schedule">---</span></p>
+    </div>
+    <div class="report-card">
+        <h2>Statistics</h2>
+        <canvas id="statsChart" width="400" height="200"></canvas>
+    </div>
+</section>
+
+<footer>
+    &copy; 2025 AquaSmart Krishi. All Rights Reserved (sarcasm included).
+</footer>
+
+<!-- JS -->
+<script src="script.js"></script>
+</body>
+</html>

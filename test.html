@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Test — AquaSmart Krishi (All-in-one)</title>
+
+<!-- Inline minimal fonts/icons for demo -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins&family=Rajdhani&family=Orbitron&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+<style>
+  /* ---------- simple base ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Poppins",sans-serif;background:#0f1720;color:#e6f7ff}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:linear-gradient(90deg,#014f5b,#006b7e)}
+  header .title{font-family:"Orbitron",sans-serif;font-size:20px;color:#fff}
+  main{padding:20px;max-width:980px;margin:20px auto}
+  .card{background:rgba(255,255,255,0.03);border:1px solid rgba(0,255,255,0.08);padding:18px;border-radius:12px;margin-bottom:16px}
+  label{display:block;margin-top:8px;margin-bottom:6px}
+  input,select,button{font-family:inherit;padding:10px;border-radius:8px;border:none}
+  input,select{width:100%;background:#f7fff7a0;color:#000}
+  button{cursor:pointer}
+  .row{display:flex;gap:12px}
+  .col{flex:1}
+  footer{text-align:center;padding:16px;color:#cfeef6;margin-top:12px;background:linear-gradient(90deg,#002b36,#001e26)}
+  /* loader */
+  .loader-overlay{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center}
+  .loader-box{background:#041126;padding:24px;border-radius:10px;box-shadow:0 8px 30px rgba(0,255,255,0.07);text-align:center}
+  .loader-circle{width:72px;height:72px;border-radius:50%;border:8px solid rgba(0,255,255,0.12);border-top-color:#00ffd9;animation:spin 1s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .muted{color:#9fd7e6}
+  /* responsive */
+  @media (max-width:700px){ .row{flex-direction:column} .hero{padding:8px} }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader" class="loader-overlay" role="status" aria-hidden="true">
+  <div class="loader-box">
+    <div class="loader-circle" aria-hidden="true"></div>
+    <div style="color:#00ffd9;font-weight:700">Calculating Plan…</div>
+    <div style="font-size:12px;color:#9fd7e6;margin-top:8px">This simulates a 5-second calculation.</div>
+  </div>
+</div>
+
+<header>
+  <div class="title">AquaSmart Krishi — Demo</div>
+  <div style="color:#dff8f4">Ready for testing</div>
+</header>
+
+<main>
+  <!-- hero (keeps original vibe) -->
+  <section class="card hero">
+    <h2>Welcome to AquaSmart Krishi</h2>
+    <p class="muted">Smart farming — enter crop, soil, area and region below. Click Develop Plan to see results.</p>
+  </section>
+
+  <!-- form -->
+  <section id="form-section" class="card">
+    <h3>Setup Your Farm</h3>
+    <label for="crop-select">Select Crop</label>
+    <select id="crop-select">
+      <option>Wheat</option>
+      <option>Rice</option>
+      <option>Cotton</option>
+      <option>Sugarcane</option>
+    </select>
+
+    <label for="soil-select">Select Soil Type</label>
+    <select id="soil-select">
+      <option>Loam</option>
+      <option>Clay</option>
+      <option>Sandy</option>
+      <option>Alluvial</option>
+    </select>
+
+    <div class="row" style="margin-top:10px">
+      <div class="col">
+        <label for="land-area">Area (acres)</label>
+        <input id="land-area" type="number" placeholder="e.g. 2.5" />
+      </div>
+      <div class="col">
+        <label for="region-name">Region</label>
+        <input id="region-name" type="text" placeholder="e.g. Pune" />
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <button id="submit-btn" style="background:linear-gradient(90deg,#00ffd9,#00bfff);padding:10px 16px;border-radius:10px;font-weight:700">
+        Develop Plan
+      </button>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:#99d7e2">Tip: open browser Console (F12) to see debug logs.</div>
+  </section>
+
+  <!-- results -->
+  <section id="report-section" class="card" aria-live="polite">
+    <h3>Report (results will appear here)</h3>
+
+    <div class="row">
+      <div class="col">
+        <div class="card" id="weather-card">
+          <strong>Weather</strong>
+          <p>Location: <span id="report-location">—</span></p>
+          <p>Temperature: <span id="report-temp">—</span> <span id="weather-icon"></span></p>
+          <p>Rain Forecast: <span id="report-rain">—</span></p>
+        </div>
+
+        <div class="card" id="water-card">
+          <strong>Water & Energy</strong>
+          <p>Daily Water: <span id="report-water">—</span></p>
+          <p>Sprinklers: <span id="report-sprinklers">—</span></p>
+          <p>Energy: <span id="report-energy">—</span></p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card" id="advice-card">
+          <strong>Recommendations</strong>
+          <p>Pros: <span id="pros">—</span></p>
+          <p>Cons: <span id="cons">—</span></p>
+          <p>Fertilizer: <span id="fertilizer">—</span></p>
+          <p>Irrigation: <span id="irrigation">—</span></p>
+          <p>Schedule: <span id="schedule">—</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Test page — not live. Use this to verify JS works locally.
+</footer>
+
+<script>
+/*
+  This script is intentionally minimal and proven to run when embedded at end of body.
+  It simulates the 5-second loader and then populates the report fields.
+*/
+
+// quick references (IDs must match)
+const loader = document.getElementById('loader');
+const submitBtn = document.getElementById('submit-btn');
+
+const cropSelect = document.getElementById('crop-select');
+const soilSelect = document.getElementById('soil-select');
+const landAreaInput = document.getElementById('land-area');
+const regionInput = document.getElementById('region-name');
+
+const reportLocation = document.getElementById('report-location');
+const reportTemp = document.getElementById('report-temp');
+const reportRain = document.getElementById('report-rain');
+const reportWater = document.getElementById('report-water');
+const reportSprinklers = document.getElementById('report-sprinklers');
+const reportEnergy = document.getElementById('report-energy');
+
+const prosEl = document.getElementById('pros');
+const consEl = document.getElementById('cons');
+const fertilizerEl = document.getElementById('fertilizer');
+const irrigationEl = document.getElementById('irrigation');
+const scheduleEl = document.getElementById('schedule');
+const weatherIconSpan = document.getElementById('weather-icon');
+
+function log(...args){ console.log('[AquaSmart]', ...args); }
+
+// basic crop knowledge
+const cropData = {
+  Wheat: {water:1800, energy:50, pros:"High yield", cons:"Moderate water", fertilizer:"Nitrogen-rich", irrigation:"Sprinkler", schedule:"Morning & evening"},
+  Rice: {water:5000, energy:80, pros:"Staple crop", cons:"High water need", fertilizer:"Phosphorus-rich", irrigation:"Flood/Surface", schedule:"Keep fields wet"},
+  Cotton: {water:2200, energy:40, pros:"Profitable", cons:"Soil sensitive", fertilizer:"Potassium-rich", irrigation:"Drip", schedule:"Alternate days"},
+  Sugarcane: {water:6000, energy:100, pros:"High revenue", cons:"Very high water", fertilizer:"Balanced NPK", irrigation:"Canal/Drip", schedule:"Daily"}
+};
+
+// small helper to simulate weather icon choice (text emoji)
+function weatherEmoji(tempC, rainMm){
+  if(rainMm > 8) return '🌧';
+  if(tempC > 30) return '☀';
+  if(tempC < 15) return '❄';
+  return '⛅';
+}
+
+submitBtn.addEventListener('click', () => {
+  // read inputs
+  const crop = cropSelect.value;
+  const soil = soilSelect.value;
+  const area = parseFloat(landAreaInput.value);
+  const region = (regionInput.value || '').trim();
+
+  log('submit clicked', {crop, soil, area, region});
+
+  // validation
+  if(!area || area <= 0 || !region){
+    alert('Please enter a valid area and region.');
+    return;
+  }
+
+  // show loader overlay (flex to center)
+  loader.style.display = 'flex';
+
+  // simulate 5 seconds of "calculation"
+  setTimeout(() => {
+    loader.style.display = 'none';
+
+    // generate data
+    const temp = 20 + Math.floor(Math.random()*15);   // 20..34
+    const rain = Math.floor(Math.random()*12);        // 0..11 mm
+    const selected = cropData[crop] || cropData['Wheat'];
+
+    const totalWater = selected.water * area;         // L/day
+    const sprinklers = Math.ceil(area * 2);
+    const energyUsed = selected.energy * area;        // kWh (estimate)
+
+    // populate DOM
+    reportLocation.textContent = region;
+    reportTemp.textContent = temp + '°C';
+    reportRain.textContent = rain + ' mm';
+    weatherIconSpan.textContent = weatherEmoji(temp, rain);
+
+    reportWater.textContent = totalWater.toLocaleString() + ' L';
+    reportSprinklers.textContent = sprinklers;
+    reportEnergy.textContent = energyUsed.toLocaleString() + ' kWh';
+
+    prosEl.textContent = selected.pros;
+    consEl.textContent = selected.cons;
+    fertilizerEl.textContent = selected.fertilizer;
+    irrigationEl.textContent = selected.irrigation;
+    scheduleEl.textContent = selected.schedule;
+
+    // scroll to results for visibility
+    document.getElementById('report-section').scrollIntoView({behavior:'smooth'});
+
+    log('report updated', {totalWater, sprinklers, energyUsed});
+
+  }, 5000);
+});
+</script>
+</body>
+</html>
