@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AquaSmart Krishi App</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Montserrat&family=Orbitron&family=Open+Sans&family=Rajdhani&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#121212;color:#fff;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 3%;background:linear-gradient(to right,#006b7e,#00bfff);box-shadow:0 5px 15px rgba(0,0,0,0.5);}
+header .logo img{height:60px;border-radius:1rem;}
+header .title{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;}
+header nav button{margin-left:1rem;padding:0.5rem 1rem;font-family:'Rajdhani',sans-serif;border-radius:1rem;border:none;cursor:pointer;transition:0.3s ease;}
+header nav button:hover{transform:translateY(-5px) scale(1.05);box-shadow:0 5px 15px rgba(0,255,255,0.7);}
+.hero-section{height:100vh;background:url('images/krishi-home-bg.jpeg') center/cover no-repeat;display:flex;justify-content:center;align-items:center;position:relative;}
+.hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);}
+.hero-content{position:relative;z-index:2;max-width:1200px;width:95%;display:flex;justify-content:space-between;align-items:center;}
+.hero-text{width:60%;color:#00ffff;}
+.hero-text h1{font-size:3rem;margin-bottom:1rem;}
+.hero-text p{font-size:1.1rem;line-height:1.6;}
+.hero-buttons button{margin-right:1rem;padding:0.7rem 1.5rem;font-weight:700;border-radius:1rem;border:none;cursor:pointer;background:linear-gradient(to right,#00ffcc,#00bfff);color:#121212;font-family:'Rajdhani',sans-serif;transition:0.3s ease;}
+.hero-buttons button:hover{transform:translateY(-8px) scale(1.05);box-shadow:0 5px 15px #00ffffaa;}
+.carousel{width:35%;height:400px;overflow:hidden;border-radius:2rem;border:3px solid #00ffff;position:relative;}
+.carousel img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
+.carousel img:hover{transform:scale(1.1);}
+.form-section{background:url('images/krishi-form-bg.jpg') center/cover no-repeat;padding:3% 5%;display:flex;justify-content:space-around;align-items:flex-start;flex-wrap:wrap;}
+.form-card{background:rgba(0,111,126,0.85);padding:1.5rem;border-radius:2rem;width:45%;margin:1rem 0;transition:0.3s ease;}
+.form-card:hover{transform:translateY(-5px);}
+.form-card h2{color:#7effff;margin-bottom:1rem;}
+.form-card label{font-family:'Montserrat',sans-serif;margin-bottom:0.5rem;display:block;}
+.form-card input,.form-card select{width:100%;padding:0.5rem 1rem;border-radius:0.5rem;border:none;outline:none;}
+.form-card button{margin-top:1rem;padding:0.7rem 1.5rem;font-family:'Rajdhani',sans-serif;border:none;border-radius:1rem;cursor:pointer;font-weight:600;background:linear-gradient(to right,#a4a4f3,#92db92);transition:0.3s ease;}
+.form-card button:hover{transform:translateY(-6px);box-shadow:0 5px 10px #fff;}
+.report-section{padding:2rem 5%;background:#111;display:flex;justify-content:space-between;flex-wrap:wrap;}
+.report-card{background:rgba(50,50,50,0.8);border:2px solid #00ffff;border-radius:2rem;padding:1rem;width:45%;margin:1rem 0;transition:0.5s ease;opacity:0;transform:translateX(0);}
+.report-card.left-slide{transform:translateX(-50px);}
+.report-card.right-slide{transform:translateX(50px);}
+.report-card.show{opacity:1;transform:translateX(0);}
+.report-card i{color:#00ffff;margin-right:8px;}
+footer{padding:2rem 5%;text-align:center;background:linear-gradient(to right,#006b7e,#00bfff);font-family:'Rajdhani',sans-serif;}
+.fade-in{animation:fadeIn 1s ease forwards;}
+@keyframes fadeIn{0%{opacity:0;}100%{opacity:1;}}
+/* Loader overlay */
+#loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:999;}
+.loader-box{display:flex;flex-direction:column;align-items:center;background:rgba(20,20,20,0.9);padding:2rem 3rem;border-radius:1rem;text-align:center;box-shadow:0 0 20px #00ffff;}
+.loader-circle{width:80px;height:80px;border:6px solid #00ffff;border-top:6px solid #ff6600;border-radius:50%;animation:spin 1.2s linear infinite;margin-bottom:1rem;}
+.loader-text{color:#00ffff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:1px;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+</style>
+</head>
+
+<body>
+<!-- Loader Popup -->
+<div id="loader">
+    <div class="loader-box">
+        <div class="loader-circle"></div>
+        <div class="loader-text">Calculating Plan...</div>
+    </div>
+</div>
+
+<header>
+    <div class="logo"><img src="images/app-logo.png" alt="AquaSmart Logo"></div>
+    <div class="title">AquaSmart Krishi</div>
+    <nav>
+        <button id="start-analysis">Start Analysis</button>
+        <button id="open-farm">Open Farm</button>
+    </nav>
+</header>
+
+<section class="hero-section fade-in">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Welcome to AquaSmart Krishi</h1>
+            <p>Save water, increase yield. Use AI-powered analysis to manage your farm efficiently and sustainably.</p>
+            <div class="hero-buttons">
+                <button id="go-form">Develop Plan</button>
+                <button id="see-report">View Report</button>
+            </div>
+        </div>
+        <div class="carousel">
+            <img src="images/crop1.jpg" alt="Crop 1">
+        </div>
+    </div>
+</section>
+
+<section class="form-section fade-in" id="form-section">
+    <div class="form-card">
+        <h2>Setup Your Farm</h2>
+        <label for="crop-select">Select Crop</label>
+        <select id="crop-select">
+            <option value="wheat">Wheat</option>
+            <option value="rice">Rice</option>
+            <option value="cotton">Cotton</option>
+        </select>
+        <label for="soil-select">Select Soil Type</label>
+        <select id="soil-select">
+            <option value="loam">Loam</option>
+            <option value="clay">Clay</option>
+            <option value="sandy">Sandy</option>
+        </select>
+        <label for="land-area">Area of Land (acres)</label>
+        <input type="number" id="land-area" placeholder="2.5">
+        <label for="region-name">Region</label>
+        <input type="text" id="region-name" placeholder="Pune">
+        <button id="submit-btn">Develop Plan</button>
+    </div>
+</section>
+
+<section class="report-section fade-in" id="report-section">
+    <div class="report-card left-slide">
+        <h2><i class="fas fa-cloud-sun"></i> Weather Forecast</h2>
+        <p>Location: <span id="report-location">---</span></p>
+        <p>Temp: <span id="report-temp">0°C</span></p>
+        <p>Rain Forecast: <span id="report-rain">0 mm</span></p>
+    </div>
+    <div class="report-card right-slide">
+        <h2><i class="fas fa-tint"></i> Water & Energy</h2>
+        <p>Daily Water Needed: <span id="report-water">0 L</span></p>
+        <p>Sprinklers Suggested: <span id="report-sprinklers">0</span></p>
+        <p>Energy Saved: <span id="report-energy">0 kWh</span></p>
+    </div>
+    <div class="report-card left-slide">
+        <h2><i class="fas fa-leaf"></i> Suggestions</h2>
+        <p id="report-suggestion">---</p>
+    </div>
+    <div class="report-card right-slide">
+        <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
+        <canvas id="statsChart" width="400" height="200"></canvas>
+    </div>
+</section>
+
+<footer>&copy; 2025 AquaSmart Krishi. All Rights Reserved.</footer>
+
+<script>
+/* Carousel */
+let carouselImg=document.querySelector('.carousel img');
+let images=['images/crop1.jpg','images/crop2.jpg','images/crop3.jpg'];
+let index=0;
+setInterval(()=>{index=(index+1)%images.length;carouselImg.src=images[index];},3000);
+
+/* Scroll buttons */
+document.getElementById('go-form').addEventListener('click',()=>{document.getElementById('form-section').scrollIntoView({behavior:'smooth'});});
+document.getElementById('see-report').addEventListener('click',()=>{document.getElementById('report-section').scrollIntoView({behavior:'smooth'});});
+
+/* Loader & Form Submission */
+const submitBtn=document.getElementById('submit-btn');
+const loader=document.getElementById('loader');
+submitBtn.addEventListener('click',()=>{
+    const crop=document.getElementById('crop-select').value;
+    const soil=document.getElementById('soil-select').value;
+    const area=parseFloat(document.getElementById('land-area').value)||1;
+    const region=document.getElementById('region-name').value||'Unknown';
+
+    // Show loader popup
+    loader.style.display='flex';
+
+    setTimeout(()=>{
+        loader.style.display='none';
+
+        // Fill report
+        document.getElementById('report-location').textContent=region;
+        let temp=Math.round(20+Math.random()*10);
+        let rain=(soil==='clay')?Math.round(80+Math.random()*20):Math.round(40+Math.random()*30);
+        document.getElementById('report-temp').textContent=temp+'°C';
+        document.getElementById('report-rain').textContent=rain+' mm';
+        let waterNeed=Math.round(area*1000*(soil==='sandy'?1.2:soil==='clay'?0.8:1));
+        document.getElementById('report-water').textContent=waterNeed+' L/day';
+        document.getElementById('report-sprinklers').textContent=Math.ceil(area*2);
+        document.getElementById('report-energy').textContent=(Math.random()*10).toFixed(2)+' kWh';
+        let suggestion='';
+        if(crop==='rice') suggestion='Ensure proper water management; ideal for clay soil.';
+        else if(crop==='wheat') suggestion='Maintain moderate irrigation; good for loam soil.';
+        else suggestion='Use drip irrigation for best efficiency on sandy soil.';
+        document.getElementById('report-suggestion').textContent=suggestion;
+
+        // Animate report cards
+        let cards=document.querySelectorAll('.report-card');
+        cards.forEach((card,i)=>{
+            setTimeout(()=>{card.classList.add('show');},i*200);
+        });
+
+        // Bar chart
+        const ctx=document.getElementById('statsChart').getContext('2d');
+        const statsChart=new Chart(ctx,{
+            type:'bar',
+            data:{
+                labels:['Water L','Sprinklers','Energy kWh'],
+                datasets:[{label:'Usage Stats',data:[waterNeed,Math.ceil(area*2),(Math.random()*10).toFixed(2)],backgroundColor:['#00ffff','#ff6600','#92db92']}]
+            },
+            options:{
+                responsive:true,
+                animation:{duration:1500,easing:'easeOutBounce'},
+                scales:{y:{beginAtZero:true}}
+            }
+        });
+
+        // Scroll to report
+        document.getElementById('report-section').scrollIntoView({behavior:'smooth'});
+    },5000);
+});
+</script>
+</body>
+</html>
